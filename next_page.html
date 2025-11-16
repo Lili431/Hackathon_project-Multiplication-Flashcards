@@ -36,13 +36,13 @@
         let userAnswer = parseInt(document.getElementById("answer").value);
         let correct = deck[index].answer;
         if (userAnswer === correct) {
-            document.getElementById("feedback").innerHTML = "Correct!";
+            document.getElementById("feedback").innerHTML = "Correct!";//correct answer
             document.getElementById("feedback").className = "correct";
             document.getElementById("nextBtn").style.display = "block";//then shows the next button
             document.getElementById("flipBtn").style.display = "none";
             if (flipped) unflipCard();// Flip back if card was showing the answer
         } else {
-            document.getElementById("feedback").innerHTML = "Incorrect, try again.";
+            document.getElementById("feedback").innerHTML = "Incorrect, try again.";//incorrect answer
             document.getElementById("feedback").className = "incorrect";
             document.getElementById("flipBtn").style.display = "block";//Shows flip button so user can see the answer
         }
