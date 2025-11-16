@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiplication Flashcards</title>
+    <link rel="stylesheet" href="/static/next_page.css">
+</head>
+<body>
+    <div class="title-box">
+        <h1>Flashcards for {{ multiple }}</h1>
+    </div>
+    <div class="flashcard-container">
+        <div class="flip-card" id="flipCard">
+            <div class="flip-inner" id="flipInner">
+                <div class="flip-front" id="flashcard">
+                    {{ deck[0].problem }}
+                </div>
+                <div class="flip-back" id="flashcardBack">
+                    Answer: ?
+                </div>
+            </div>
+        </div>
+        <input id="answer" type="number" placeholder="Enter answer">
+        <button onclick="checkAnswer()">Enter</button>
+        <p id="feedback"></p>
+        <button id="flipBtn" class="small-btn" style="display:none;" onclick="flipCard()">Flip Card</button>
+        <button id="nextBtn" class="small-btn" style="display:none;" onclick="nextCard()">Next</button>
+    </div>
+    <a href="/" class="home-btn">Home</a>
+<script>
+    const deck = JSON.parse(`{{ deck | tojson | safe }}`);//first off, i need to convert deck data from Flask into JavaScript
+    let index = 0;//This will track which flashcard the user is on
+    let flipped = false;// will see if card is flipped
+    function checkAnswer() {//now it will check if user's answer matches the correct answer
+        let userAnswer = parseInt(document.getElementById("answer").value);
+        let correct = deck[index].answer;
+        if (userAnswer === correct) {
+            document.getElementById("feedback").innerHTML = "Correct!";
+            document.getElementById("feedback").className = "correct";
+            document.getElementById("nextBtn").style.display = "block";//then shows the next button
+            document.getElementById("flipBtn").style.display = "none";
+            if (flipped) unflipCard();// Flip back if card was showing the answer
+        } else {
+            document.getElementById("feedback").innerHTML = "Incorrect, try again.";
+            document.getElementById("feedback").className = "incorrect";
+            document.getElementById("flipBtn").style.display = "block";//Shows flip button so user can see the answer
+        }
+    }
+    function flipCard() {//Flips the card to show the answer
+        let correct = deck[index].answer;
+        document.getElementById("flashcardBack").innerText = "Answer: " + correct;
+        document.getElementById("flipInner").classList.add("flipped");
+        flipped = true;
+    }
+    function unflipCard() {//Unflips the card to show the problem again
+        document.getElementById("flipInner").classList.remove("flipped");
+        flipped = false;
+    }
+    function nextCard() {//this wil move to the next flashcard
+        index++;
+        if (index >= deck.length) {//If there are no more cards, show a "Done!" message
+            document.getElementById("flashcard").innerHTML = "Done!";
+            document.getElementById("flashcardBack").innerHTML = "";
+            document.getElementById("answer").style.display = "none";
+            document.getElementById("flipBtn").style.display = "none";
+            document.getElementById("nextBtn").style.display = "none";
+            return;
+        }
+        unflipCard();//now it will reset card for the next problem
+        document.getElementById("flashcard").innerHTML = deck[index].problem;
+        document.getElementById("flashcardBack").innerHTML = "Answer: ?";
+        document.getElementById("answer").value = "";
+        document.getElementById("feedback").innerHTML = "";
+        document.getElementById("nextBtn").style.display = "none";
+        document.getElementById("flipBtn").style.display = "none";
+    }
+</script>
+</body>
+</html>

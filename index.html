@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiplication Flashcards</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+</head>
+<body>
+    <div class="title-container">
+        <h1>Multiplication Flashcards</h1>
+        <h2>Let's get ready to learn</h2>
+        <div class="divider"></div>
+    </div>
+    <div class="content-box">
+        <h3 class="prompt">Enter the multiple you<br>wish to learn:</h3>
+        <input type="number" id="max-factor" min="1" max="12" placeholder="e.g., 7">
+        <button onclick="startLearning()">Enter</button>
+        <p id="setup-message" class="feedback"></p>
+    </div>
+    <script>
+        function startLearning() {//this will run when the user clicks the button
+            const maxFactor = parseInt(document.getElementById("max-factor").value);
+            const message = document.getElementById("setup-message");
+            if (isNaN(maxFactor) || maxFactor < 1 || maxFactor > 12) {//if the chosen number is issing or not between 1-12, it will show an error
+                message.textContent = "Please enter a number between 1 and 12.";
+                message.className = "feedback error";
+                return;
+            }
+            window.location.href = `/quiz?max_factor=${maxFactor}`;//Goes to the quiz page and pass the number in the URL
+        }
+    </script>
+</body>
+</html>
